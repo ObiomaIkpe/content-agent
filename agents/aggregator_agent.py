@@ -39,6 +39,7 @@ Each snapshot contains:
 - claude_sessions: Claude Code session logs (what was built, problems solved)
 - github: commits and PRs pushed
 - activitywatch: VSCode files edited, apps used, browser activity
+- git_diffs: local git commits with stat summaries (files changed, lines added/removed) and, for small commits, the full code diff. Use the diffs to understand *specifically* what changed in the code — this is the most precise signal for what was actually built.
 
 Your job is to merge all snapshots and produce a clean work report with:
 1. A summary of what was worked on today (projects, features, bugs, research)

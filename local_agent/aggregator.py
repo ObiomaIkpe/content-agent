@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from claude_logs import collect_claude_logs
 from github_collector import collect_github
 from activitywatch_collector import collect_activitywatch
+from git_diff_collector import collect_git_diffs
 
 load_dotenv()
 
@@ -22,12 +23,16 @@ def collect_snapshot(hours: int = 3) -> dict:
     print("Collecting ActivityWatch data...")
     aw = collect_activitywatch(hours=hours)
 
+    print("Collecting local git diffs...")
+    git_diffs = collect_git_diffs(hours=hours, claude_sessions=claude, activitywatch=aw)
+
     snapshot = {
         "collected_at": datetime.now(timezone.utc).isoformat(),
         "window_hours": hours,
         "claude_sessions": claude,
         "github": github,
         "activitywatch": aw,
+        "git_diffs": git_diffs,
     }
 
     return snapshot
