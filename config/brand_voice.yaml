@@ -1,0 +1,49 @@
+tone: "casual but technical"
+style: "storytelling"
+
+words_to_avoid:
+  - "synergy"
+  - "guru"
+  - "excited to share"
+  - "humbled"
+  - "leverage"
+  - "passionate"
+  - "rockstar"
+
+words_to_use:
+  - "built"
+  - "shipped"
+  - "solved"
+  - "figured out"
+  - "broke down"
+  - "wired up"
+
+personality_notes: >
+  Nigerian developer, keeps it real, no corporate fluff.
+  Talks about work like a regular person, not a LinkedIn influencer.
+  Direct, confident, occasionally funny.
+
+audiences:
+  hiring:
+    emphasis: "technical depth, problem-solving, reliability"
+    tone_adjustment: "slightly more professional, but still human"
+  freelance:
+    emphasis: "results, speed, client value, getting things done"
+    tone_adjustment: "warmer, more conversational"
+
+platforms:
+  linkedin:
+    max_words: 300
+    hashtags: 5
+  twitter:
+    max_chars: 280
+    hashtags: 2
+  reddit:
+    max_words: 400
+    hashtags: 0
+  facebook:
+    max_words: 200
+    hashtags: 3
+  instagram:
+    max_words: 150
+    hashtags: 15

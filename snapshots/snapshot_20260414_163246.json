@@ -1,0 +1,158 @@
+{
+  "collected_at": "2026-04-14T16:32:46.239913+00:00",
+  "window_hours": 3,
+  "claude_sessions": [],
+  "github": {
+    "commits": [],
+    "pull_requests": []
+  },
+  "activitywatch": {
+    "window_activity": [
+      {
+        "app": "Google-chrome",
+        "seconds": 483
+      },
+      {
+        "app": "Code",
+        "seconds": 150
+      },
+      {
+        "app": "xdg-desktop-portal-gnome",
+        "seconds": 15
+      },
+      {
+        "app": "unknown",
+        "seconds": 2
+      }
+    ],
+    "active_seconds": 3688,
+    "browser_activity": [
+      {
+        "url": "https://claude.ai/new",
+        "title": "Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/3d8e98c3-7187-4835-bbf0-4e031eec3daa",
+        "title": "GitHub collector API connection troubleshooting - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/new",
+        "title": "Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/3d8e98c3-7187-4835-bbf0-4e031eec3daa",
+        "title": "GitHub collector API connection troubleshooting - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/new",
+        "title": "Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/3d8e98c3-7187-4835-bbf0-4e031eec3daa",
+        "title": "GitHub collector API connection troubleshooting - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/new",
+        "title": "Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/3d8e98c3-7187-4835-bbf0-4e031eec3daa",
+        "title": "GitHub collector API connection troubleshooting - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/new",
+        "title": "Claude",
+        "seconds": 0
+      },
+      {
+        "url": "chrome://newtab/",
+        "title": "New tab",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/3d8e98c3-7187-4835-bbf0-4e031eec3daa",
+        "title": "GitHub collector API connection troubleshooting - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "chrome://newtab/",
+        "title": "New tab",
+        "seconds": 0
+      },
+      {
+        "url": "chrome://newtab/",
+        "title": "New tab",
+        "seconds": 53
+      },
+      {
+        "url": "https://claude.ai/chat/4b556f57-8b2f-41fe-a246-eab1114f0842",
+        "title": "Greeting - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/3d8e98c3-7187-4835-bbf0-4e031eec3daa",
+        "title": "GitHub collector API connection troubleshooting - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/new",
+        "title": "Claude",
+        "seconds": 71
+      },
+      {
+        "url": "https://www.facebook.com/photo/?fbid=1392346146259510&set=pcb.1392346502926141",
+        "title": "Facebook",
+        "seconds": 79
+      },
+      {
+        "url": "https://www.facebook.com/photo/?fbid=1392345736259551&set=pcb.1392346502926141",
+        "title": "Facebook",
+        "seconds": 0
+      },
+      {
+        "url": "https://www.facebook.com/photo/?fbid=1392345736259551&set=pcb.1392346502926141",
+        "title": "Facebook",
+        "seconds": 0
+      },
+      {
+        "url": "https://www.facebook.com/photo?fbid=1392345489592909&set=pcb.1392346502926141",
+        "title": "Facebook",
+        "seconds": 60
+      }
+    ],
+    "vscode_activity": [
+      {
+        "file": "/home/youngtee/content-agent/local_agent/activitywatch_collector.py (python)",
+        "seconds": 18
+      },
+      {
+        "file": "/home/youngtee/content-agent/local_agent/aggregator.py (python)",
+        "seconds": 15
+      },
+      {
+        "file": "/home/youngtee/content-agent/local_agent/claude_logs.py (python)",
+        "seconds": 8
+      },
+      {
+        "file": "/home/youngtee/content-agent/local_agent/github_collector.py (python)",
+        "seconds": 2
+      },
+      {
+        "file": "unknown (unknown)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/content-agent/.env (dotenv)",
+        "seconds": 0
+      }
+    ]
+  }
+}
