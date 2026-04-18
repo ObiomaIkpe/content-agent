@@ -11,6 +11,7 @@ from telegram.ext import (
 )
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+import publishers
 from config.loader import load_brand_voice
 
 load_dotenv()
@@ -160,12 +161,29 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if len(reviewed) == len(pending_posts):
         approved = [p for p in pending_posts if pending_posts[p].get("approved")]
         rejected = [p for p in pending_posts if not pending_posts[p].get("approved")]
+
         await query.message.reply_text(
             f"All posts reviewed!\n"
             f"✅ Approved: {', '.join(approved) or 'none'}\n"
             f"❌ Rejected: {', '.join(rejected) or 'none'}\n\n"
-            f"Approved posts will be queued for posting."
+            f"Publishing approved posts..."
         )
+
+        results = []
+        for platform in approved:
+            text = pending_posts[platform].get("final") or pending_posts[platform].get("draft", "")
+            try:
+                result = await asyncio.get_event_loop().run_in_executor(
+                    None, publishers.publish, platform, text
+                )
+                if result.get("skipped"):
+                    results.append(f"⏭️ {platform}: {result['reason']}")
+                else:
+                    results.append(f"✅ {platform}: published")
+            except Exception as e:
+                results.append(f"❌ {platform}: failed — {e}")
+
+        await query.message.reply_text("\n".join(results))
 
 
 def build_app() -> Application:

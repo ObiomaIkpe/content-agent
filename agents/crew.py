@@ -8,6 +8,7 @@ from crewai import Crew, Agent, Task, LLM
 load_dotenv()
 
 sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from config.loader import load_brand_voice
 
 from aggregator_agent import build_aggregator_agent, build_aggregator_task, load_todays_snapshots
