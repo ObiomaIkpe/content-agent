@@ -1,7 +1,7 @@
 from . import twitter, linkedin
 
 
-def publish(platform: str, text: str) -> dict:
+def publish(platform: str, text: str, image_path: str = None) -> dict:
     publishers = {
         "twitter": twitter.publish,
         "linkedin": linkedin.publish,
@@ -9,4 +9,4 @@ def publish(platform: str, text: str) -> dict:
     fn = publishers.get(platform)
     if fn is None:
         return {"skipped": True, "reason": f"No publisher for {platform} yet"}
-    return fn(text)
+    return fn(text, image_path=image_path)

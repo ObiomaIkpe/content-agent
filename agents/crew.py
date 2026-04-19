@@ -10,6 +10,8 @@ load_dotenv()
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from config.loader import load_brand_voice
+from history import load_history, save_topic
+from image_generator import generate_image
 
 from aggregator_agent import build_aggregator_agent, build_aggregator_task, load_todays_snapshots
 from strategist_agent import build_strategist_agent, build_strategist_task
@@ -44,7 +46,7 @@ def run_pipeline(brand_voice: dict = None, content_history: list = None) -> dict
     if brand_voice is None:
         brand_voice = DEFAULT_BRAND_VOICE
     if content_history is None:
-        content_history = []
+        content_history = load_history()
 
     # Step 1 — Aggregate snapshots into work report
     print("\n=== STEP 1: Aggregating snapshots ===")
@@ -73,6 +75,10 @@ def run_pipeline(brand_voice: dict = None, content_history: list = None) -> dict
         return {}
 
     highlight = highlights[0]
+    save_topic(
+        topic=highlight.get("topic", ""),
+        platforms=highlight.get("suggested_platforms", []),
+    )
 
     # Step 3 — Write platform drafts
     print("\n=== STEP 3: Writing platform drafts ===")
@@ -85,11 +91,23 @@ def run_pipeline(brand_voice: dict = None, content_history: list = None) -> dict
     ]
 
     drafts = {}
+    images = {}
+    topic = highlight.get("topic", "")
+    summary = work_report.get("summary", "")
+
     for platform, writer, task_fn in writers:
         print(f"\nWriting {platform} post...")
         task = task_fn(writer, highlight, brand_voice)
         crew = Crew(agents=[writer], tasks=[task], verbose=False)
         drafts[platform] = str(crew.kickoff())
+
+        print(f"Generating {platform} image...")
+        try:
+            images[platform] = generate_image(topic=topic, summary=summary, platform=platform, draft=drafts[platform])
+            print(f"  Saved: {images[platform]}")
+        except Exception as e:
+            print(f"  Image generation failed for {platform}: {e}")
+            images[platform] = None
 
     # Step 4 — Review drafts
     print("\n=== STEP 4: Reviewing drafts ===")
@@ -107,6 +125,7 @@ def run_pipeline(brand_voice: dict = None, content_history: list = None) -> dict
             "status": review.get("status", "approved"),
             "feedback": review.get("feedback", ""),
             "final": review.get("revised_post") or draft,
+            "image_path": images.get(platform),
         }
 
     return final_posts

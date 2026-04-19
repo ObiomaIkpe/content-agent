@@ -129,6 +129,12 @@ async def send_all_drafts(app: Application, final_posts: dict):
     )
 
     for platform, post_data in final_posts.items():
+        image_path = post_data.get("image_path")
+        if image_path:
+            with open(image_path, "rb") as f:
+                await app.bot.send_photo(
+                    chat_id=TELEGRAM_CHAT_ID, photo=f, caption=f"{platform.upper()} image"
+                )
         await send_draft_for_review(app, platform, post_data)
 
 
@@ -172,9 +178,10 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         results = []
         for platform in approved:
             text = pending_posts[platform].get("final") or pending_posts[platform].get("draft", "")
+            image_path = pending_posts[platform].get("image_path")
             try:
                 result = await asyncio.get_event_loop().run_in_executor(
-                    None, publishers.publish, platform, text
+                    None, lambda p=platform, t=text, i=image_path: publishers.publish(p, t, i)
                 )
                 if result.get("skipped"):
                     results.append(f"⏭️ {platform}: {result['reason']}")
