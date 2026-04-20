@@ -12,6 +12,7 @@ from git_diff_collector import collect_git_diffs
 load_dotenv()
 
 SNAPSHOTS_DIR = os.path.join(os.path.dirname(__file__), "..", "snapshots")
+RETRY_QUEUE_FILE = os.path.join(SNAPSHOTS_DIR, "retry_queue.json")
 SNAPSHOT_RECEIVER_URL = os.getenv("SNAPSHOT_RECEIVER_URL", "")
 SNAPSHOT_API_SECRET = os.getenv("SNAPSHOT_API_SECRET", "")
 
@@ -41,6 +42,54 @@ def collect_snapshot(hours: int = 3) -> dict:
     return snapshot
 
 
+def _push_snapshot(snapshot: dict) -> bool:
+    """Try to POST a snapshot to Hetzner. Returns True on success."""
+    try:
+        headers = {"x-api-secret": SNAPSHOT_API_SECRET} if SNAPSHOT_API_SECRET else {}
+        httpx.post(SNAPSHOT_RECEIVER_URL, json=snapshot, headers=headers, timeout=15)
+        return True
+    except Exception as e:
+        print(f"Push failed: {e}")
+        return False
+
+
+def _load_retry_queue() -> list[dict]:
+    if not os.path.exists(RETRY_QUEUE_FILE):
+        return []
+    try:
+        with open(RETRY_QUEUE_FILE) as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+
+def _save_retry_queue(queue: list[dict]):
+    os.makedirs(SNAPSHOTS_DIR, exist_ok=True)
+    with open(RETRY_QUEUE_FILE, "w") as f:
+        json.dump(queue, f)
+
+
+def flush_retry_queue():
+    """Try to push any previously failed snapshots. Called before each collection."""
+    if not SNAPSHOT_RECEIVER_URL:
+        return
+    queue = _load_retry_queue()
+    if not queue:
+        return
+
+    print(f"Retrying {len(queue)} queued snapshot(s)...")
+    remaining = []
+    for snapshot in queue:
+        if _push_snapshot(snapshot):
+            print(f"  Queued snapshot pushed: {snapshot.get('collected_at')}")
+        else:
+            remaining.append(snapshot)
+
+    _save_retry_queue(remaining)
+    if remaining:
+        print(f"  {len(remaining)} snapshot(s) still pending.")
+
+
 def save_snapshot(snapshot: dict) -> str:
     os.makedirs(SNAPSHOTS_DIR, exist_ok=True)
     filename = f"snapshot_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json"
@@ -50,12 +99,13 @@ def save_snapshot(snapshot: dict) -> str:
     print(f"Snapshot saved: {filepath}")
 
     if SNAPSHOT_RECEIVER_URL:
-        try:
-            headers = {"x-api-secret": SNAPSHOT_API_SECRET} if SNAPSHOT_API_SECRET else {}
-            httpx.post(SNAPSHOT_RECEIVER_URL, json=snapshot, headers=headers, timeout=15)
+        if _push_snapshot(snapshot):
             print(f"Snapshot pushed to {SNAPSHOT_RECEIVER_URL}")
-        except Exception as e:
-            print(f"Failed to push snapshot to server (continuing): {e}")
+        else:
+            queue = _load_retry_queue()
+            queue.append(snapshot)
+            _save_retry_queue(queue)
+            print("Snapshot added to retry queue.")
 
     return filepath
 
