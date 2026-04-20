@@ -1,0 +1,21 @@
+services:
+  bot:
+    build: .
+    command: python bot/telegram_bot.py
+    env_file: .env
+    volumes:
+      - snapshots:/app/snapshots
+    restart: unless-stopped
+
+  receiver:
+    build: .
+    command: uvicorn api.receiver:app --host 0.0.0.0 --port 8001
+    env_file: .env
+    volumes:
+      - snapshots:/app/snapshots
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+
+volumes:
+  snapshots:

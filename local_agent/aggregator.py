@@ -1,5 +1,6 @@
 import os
 import json
+import httpx
 from datetime import datetime, timezone
 from dotenv import load_dotenv
 
@@ -11,6 +12,8 @@ from git_diff_collector import collect_git_diffs
 load_dotenv()
 
 SNAPSHOTS_DIR = os.path.join(os.path.dirname(__file__), "..", "snapshots")
+SNAPSHOT_RECEIVER_URL = os.getenv("SNAPSHOT_RECEIVER_URL", "")
+SNAPSHOT_API_SECRET = os.getenv("SNAPSHOT_API_SECRET", "")
 
 
 def collect_snapshot(hours: int = 3) -> dict:
@@ -45,6 +48,15 @@ def save_snapshot(snapshot: dict) -> str:
     with open(filepath, "w") as f:
         json.dump(snapshot, f, indent=2)
     print(f"Snapshot saved: {filepath}")
+
+    if SNAPSHOT_RECEIVER_URL:
+        try:
+            headers = {"x-api-secret": SNAPSHOT_API_SECRET} if SNAPSHOT_API_SECRET else {}
+            httpx.post(SNAPSHOT_RECEIVER_URL, json=snapshot, headers=headers, timeout=15)
+            print(f"Snapshot pushed to {SNAPSHOT_RECEIVER_URL}")
+        except Exception as e:
+            print(f"Failed to push snapshot to server (continuing): {e}")
+
     return filepath
 
 
