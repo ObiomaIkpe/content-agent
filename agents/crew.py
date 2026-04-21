@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import logging
 from pathlib import Path
 from dotenv import load_dotenv
 from crewai import Crew, Agent, Task, LLM
@@ -9,6 +10,8 @@ load_dotenv()
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+logger = logging.getLogger(__name__)
 from config.loader import load_brand_voice
 from history import load_history, save_topic
 from image_generator import generate_image
@@ -49,29 +52,29 @@ def run_pipeline(brand_voice: dict = None, content_history: list = None) -> dict
         content_history = load_history()
 
     # Step 1 — Aggregate snapshots into work report
-    print("\n=== STEP 1: Aggregating snapshots ===")
+    logger.info("=== STEP 1: Aggregating snapshots ===")
     snapshots = load_todays_snapshots()
     if not snapshots:
-        print("No snapshots found. Run the local agent first.")
+        logger.warning("No snapshots found. Run the local agent first.")
         return {}
 
     agg_agent = build_aggregator_agent(claude_llm)
     agg_task = build_aggregator_task(agg_agent, snapshots)
     agg_crew = Crew(agents=[agg_agent], tasks=[agg_task], verbose=True)
     work_report = extract_json(agg_crew.kickoff())
-    print("\nWork report:", json.dumps(work_report, indent=2))
+    logger.debug("Work report: %s", json.dumps(work_report, indent=2))
 
     # Step 2 — Strategist picks angles
-    print("\n=== STEP 2: Generating content angles ===")
+    logger.info("=== STEP 2: Generating content angles ===")
     strat_agent = build_strategist_agent(claude_llm)
     strat_task = build_strategist_task(strat_agent, work_report, content_history)
     strat_crew = Crew(agents=[strat_agent], tasks=[strat_task], verbose=True)
     strategy = extract_json(strat_crew.kickoff())
-    print("\nStrategy:", json.dumps(strategy, indent=2))
+    logger.debug("Strategy: %s", json.dumps(strategy, indent=2))
 
     highlights = strategy.get("highlights", [])
     if not highlights:
-        print("No highlights generated.")
+        logger.warning("No highlights generated.")
         return {}
 
     highlight = highlights[0]
@@ -81,7 +84,7 @@ def run_pipeline(brand_voice: dict = None, content_history: list = None) -> dict
     )
 
     # Step 3 — Write platform drafts
-    print("\n=== STEP 3: Writing platform drafts ===")
+    logger.info("=== STEP 3: Writing platform drafts ===")
     writers = [
         ("linkedin", build_linkedin_writer(claude_llm), build_linkedin_task),
         ("twitter", build_twitter_writer(claude_llm), build_twitter_task),
@@ -96,21 +99,21 @@ def run_pipeline(brand_voice: dict = None, content_history: list = None) -> dict
     summary = work_report.get("summary", "")
 
     for platform, writer, task_fn in writers:
-        print(f"\nWriting {platform} post...")
+        logger.info("Writing %s post...", platform)
         task = task_fn(writer, highlight, brand_voice)
         crew = Crew(agents=[writer], tasks=[task], verbose=False)
         drafts[platform] = str(crew.kickoff())
 
-        print(f"Generating {platform} image...")
+        logger.info("Generating %s image...", platform)
         try:
             images[platform] = generate_image(topic=topic, summary=summary, platform=platform, draft=drafts[platform])
-            print(f"  Saved: {images[platform]}")
+            logger.info("Image saved: %s", images[platform])
         except Exception as e:
-            print(f"  Image generation failed for {platform}: {e}")
+            logger.error("Image generation failed for %s: %s", platform, e)
             images[platform] = None
 
     # Step 4 — Review drafts
-    print("\n=== STEP 4: Reviewing drafts ===")
+    logger.info("=== STEP 4: Reviewing drafts ===")
     reviewer = build_reviewer_agent(claude_llm)
     review_task = build_reviewer_task(reviewer, drafts, brand_voice)
     review_crew = Crew(agents=[reviewer], tasks=[review_task], verbose=True)
@@ -133,16 +136,18 @@ def run_pipeline(brand_voice: dict = None, content_history: list = None) -> dict
 
 if __name__ == "__main__":
     import asyncio
+    from logger import setup_logging
+    setup_logging()
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
     from bot.telegram_bot import build_app, send_all_drafts
 
     results = run_pipeline()
     if results:
-        print("\n=== Sending drafts to Telegram ===")
+        logger.info("Sending drafts to Telegram...")
         app = build_app()
         async def send():
             async with app:
                 await send_all_drafts(app, results)
         asyncio.run(send())
     else:
-        print("No results to send.")
+        logger.warning("No results to send.")

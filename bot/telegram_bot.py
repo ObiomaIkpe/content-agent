@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 import asyncio
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -15,6 +16,8 @@ import publishers
 from config.loader import load_brand_voice
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
@@ -204,6 +207,8 @@ def build_app() -> Application:
 
 
 if __name__ == "__main__":
-    print("Starting Telegram bot...")
+    from logger import setup_logging
+    setup_logging()
+    logger.info("Starting Telegram bot...")
     app = build_app()
     app.run_polling()

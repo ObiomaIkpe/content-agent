@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 import httpx
 from datetime import datetime, timezone
 from dotenv import load_dotenv
@@ -11,6 +12,8 @@ from git_diff_collector import collect_git_diffs
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 SNAPSHOTS_DIR = os.path.join(os.path.dirname(__file__), "..", "snapshots")
 RETRY_QUEUE_FILE = os.path.join(SNAPSHOTS_DIR, "retry_queue.json")
 SNAPSHOT_RECEIVER_URL = os.getenv("SNAPSHOT_RECEIVER_URL", "")
@@ -18,16 +21,16 @@ SNAPSHOT_API_SECRET = os.getenv("SNAPSHOT_API_SECRET", "")
 
 
 def collect_snapshot(hours: int = 3) -> dict:
-    print("Collecting Claude Code logs...")
+    logger.info("Collecting Claude Code logs...")
     claude = collect_claude_logs(hours=hours)
 
-    print("Collecting GitHub activity...")
+    logger.info("Collecting GitHub activity...")
     github = collect_github(hours=hours)
 
-    print("Collecting ActivityWatch data...")
+    logger.info("Collecting ActivityWatch data...")
     aw = collect_activitywatch(hours=hours)
 
-    print("Collecting local git diffs...")
+    logger.info("Collecting local git diffs...")
     git_diffs = collect_git_diffs(hours=hours, claude_sessions=claude, activitywatch=aw)
 
     snapshot = {
@@ -49,7 +52,7 @@ def _push_snapshot(snapshot: dict) -> bool:
         httpx.post(SNAPSHOT_RECEIVER_URL, json=snapshot, headers=headers, timeout=15)
         return True
     except Exception as e:
-        print(f"Push failed: {e}")
+        logger.warning("Push failed: %s", e)
         return False
 
 
@@ -77,17 +80,17 @@ def flush_retry_queue():
     if not queue:
         return
 
-    print(f"Retrying {len(queue)} queued snapshot(s)...")
+    logger.info("Retrying %d queued snapshot(s)...", len(queue))
     remaining = []
     for snapshot in queue:
         if _push_snapshot(snapshot):
-            print(f"  Queued snapshot pushed: {snapshot.get('collected_at')}")
+            logger.info("Queued snapshot pushed: %s", snapshot.get("collected_at"))
         else:
             remaining.append(snapshot)
 
     _save_retry_queue(remaining)
     if remaining:
-        print(f"  {len(remaining)} snapshot(s) still pending.")
+        logger.warning("%d snapshot(s) still pending after retry.", len(remaining))
 
 
 def save_snapshot(snapshot: dict) -> str:
@@ -96,16 +99,16 @@ def save_snapshot(snapshot: dict) -> str:
     filepath = os.path.join(SNAPSHOTS_DIR, filename)
     with open(filepath, "w") as f:
         json.dump(snapshot, f, indent=2)
-    print(f"Snapshot saved: {filepath}")
+    logger.info("Snapshot saved: %s", filepath)
 
     if SNAPSHOT_RECEIVER_URL:
         if _push_snapshot(snapshot):
-            print(f"Snapshot pushed to {SNAPSHOT_RECEIVER_URL}")
+            logger.info("Snapshot pushed to %s", SNAPSHOT_RECEIVER_URL)
         else:
             queue = _load_retry_queue()
             queue.append(snapshot)
             _save_retry_queue(queue)
-            print("Snapshot added to retry queue.")
+            logger.warning("Push failed — snapshot added to retry queue.")
 
     return filepath
 

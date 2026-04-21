@@ -1,10 +1,13 @@
 import os
 import subprocess
 import json
+import logging
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 ANONYMIZED_PROJECTS = os.getenv("ANONYMIZED_PROJECTS", "").split(",")
 
@@ -114,7 +117,7 @@ def collect_git_diffs(
     repo_roots = discover_repos(claude_sessions or [], activitywatch or {})
 
     if not repo_roots:
-        print("No git repos discovered from activity data.")
+        logger.warning("No git repos discovered from activity data.")
         return []
 
     results = []
@@ -134,7 +137,7 @@ def collect_git_diffs(
             "commit_count": len(commits),
             "commits": commits,
         })
-        print(f"  {repo_name}: {len(commits)} commit(s)")
+        logger.info("%s: %d commit(s)", repo_name, len(commits))
 
     return results
 
