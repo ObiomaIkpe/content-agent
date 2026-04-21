@@ -1,0 +1,223 @@
+{
+  "collected_at": "2026-04-21T17:43:00.785265+00:00",
+  "window_hours": 3,
+  "claude_sessions": [
+    {
+      "project": "anonymized",
+      "branch": "invoice fields_update",
+      "cwd": null,
+      "messages": [
+        "Let me test it out."
+      ],
+      "start_time": "2026-04-21T14:48:03.731000+00:00",
+      "end_time": "2026-04-21T15:20:10.999000+00:00",
+      "anonymized": true
+    },
+    {
+      "project": "-home-youngtee-content-agent",
+      "branch": "main",
+      "cwd": "/home/youngtee/content-agent",
+      "messages": [
+        "so far it has been, scheduler -> collectors -> aggregators -> aggregator output | crewai_aggregator_agent -> writer agents?",
+        "Yes. Also explain how data is fed into the writer agents.",
+        "I would like to add proper logging to the codebase, you know, standardize the codebase.",
+        "Great. What is next?",
+        "I think this application is actually ready",
+        "so, this project is basically complete. Crazy..."
+      ],
+      "start_time": "2026-04-21T15:26:07.496000+00:00",
+      "end_time": "2026-04-21T17:39:42.563000+00:00",
+      "anonymized": false
+    }
+  ],
+  "github": {
+    "commits": [
+      {
+        "repo": "content-agent",
+        "message": "added loggging across the app",
+        "timestamp": "2026-04-21T17:39:06Z",
+        "url": "https://github.com/ObiomaIkpe/content-agent/commit/857a352f1c512859c11681320070826318f48fa2"
+      }
+    ],
+    "pull_requests": []
+  },
+  "activitywatch": {
+    "browser_activity": [
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=Unzc731iCUY",
+        "title": "(34) How to Speak - YouTube",
+        "seconds": 51
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 34
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 60
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 0
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 46
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=Unzc731iCUY",
+        "title": "(34) How to Speak - YouTube",
+        "seconds": 6
+      },
+      {
+        "url": "https://www.rosaro.pl/",
+        "title": "YTMP3 - Free YouTube to Mp3 Downloader & Converter | MP3 & MP4 Video Downloads",
+        "seconds": 68
+      },
+      {
+        "url": "https://www.youtube.com/watch?v=Unzc731iCUY",
+        "title": "(34) How to Speak - YouTube",
+        "seconds": 60
+      },
+      {
+        "url": "https://www.youtube.com/",
+        "title": "(34) YouTube",
+        "seconds": 62
+      },
+      {
+        "url": "https://www.rosaro.pl/",
+        "title": "YTMP3 - Free YouTube to Mp3 Downloader & Converter | MP3 & MP4 Video Downloads",
+        "seconds": 13
+      },
+      {
+        "url": "chrome://newtab/",
+        "title": "New tab",
+        "seconds": 56
+      },
+      {
+        "url": "https://www.youtube.com/",
+        "title": "(34) YouTube",
+        "seconds": 49
+      },
+      {
+        "url": "chrome://newtab/",
+        "title": "New tab",
+        "seconds": 76
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 44
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 67
+      },
+      {
+        "url": "https://www.pinterest.com/tangeekelly07/male-locs/",
+        "title": "Discover 150 Male Locs and dreadlock hairstyles for men ideas | dread hairstyles, dreadlock hairstyles, dreadlock styles and more",
+        "seconds": 21
+      },
+      {
+        "url": "https://claude.ai/chat/81fcdc36-b85c-4621-82e2-40287ed95417",
+        "title": "Male hairstyle locks guide - Claude",
+        "seconds": 29
+      }
+    ],
+    "vscode_activity": [
+      {
+        "file": "/home/youngtee/content-agent/README.md (markdown)",
+        "seconds": 0
+      },
+      {
+        "file": "unknown (unknown)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/content-agent/agents/writers/facebook.py (python)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/content-agent/bot/telegram_bot.py (python)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/content-agent/agents/crew.py (python)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/content-agent/local_agent/git_diff_collector.py (python)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/content-agent/local_agent/aggregator.py (python)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/content-agent/local_agent/scheduler.py (python)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/content-agent/logger.py (python)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/crm-core-build/application/migrations/337_version_337.php (php)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/crm-core-build/application/views/admin/invoices/invoice_template.php (php)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/crm-core-build/application/views/admin/invoices/invoice_preview_html.php (php)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/crm-core-build/application/language/english/english_lang.php (php)",
+        "seconds": 0
+      },
+      {
+        "file": "/home/youngtee/crm-core-build/application/config/migration.php (php)",
+        "seconds": 0
+      }
+    ]
+  },
+  "git_diffs": [
+    {
+      "repo": "content-agent",
+      "repo_path": "/home/youngtee/content-agent",
+      "commit_count": 1,
+      "commits": [
+        {
+          "hash": "857a352f1c",
+          "message": "added loggging across the app",
+          "author": "ObiomaIkpe",
+          "timestamp": "2026-04-21 18:39:06 +0100",
+          "stat": "agents/crew.py                          |  33 ++---\n bot/telegram_bot.py                     |   7 +-\n local_agent/aggregator.py               |  25 ++--\n local_agent/git_diff_collector.py       |   7 +-\n local_agent/scheduler.py                |  16 ++-\n logger.py                               |  33 +++++\n snapshots/snapshot_20260420_144932.json | 213 ++++++++++++++++++++++++++++++++\n snapshots/snapshot_20260420_174639.json | 172 ++++++++++++++++++++++++++\n 8 files changed, 472 insertions(+), 34 deletions(-)",
+          "diff": null
+        }
+      ]
+    }
+  ]
+}
